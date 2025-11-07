@@ -1,0 +1,2109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analyst Assessment - SQL, Python & Power BI</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.6);
+            padding: 40px;
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+        
+        /* SKEUOMORPHISM: Card-like depth */
+        .card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e8eaf0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.9);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e8eaf0;
+        }
+        
+        .header h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        .language-toggle {
+            display: flex;
+            gap: 10px;
+            background: #f0f2f5;
+            padding: 6px;
+            border-radius: 10px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .lang-btn {
+            padding: 10px 20px;
+            border: 2px solid transparent;
+            background: transparent;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .lang-btn.active {
+            background: white;
+            color: #667eea;
+            border-color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+        
+        .lang-btn:hover:not(.active) {
+            color: #764ba2;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 24px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.25);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .question-group {
+            margin-bottom: 25px;
+            padding: 18px;
+            background: linear-gradient(135deg, #fafbfc 0%, #f4f6f8 100%);
+            border-left: 5px solid #667eea;
+            border-radius: 12px;
+            border: 1px solid #e8eaf0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8);
+        }
+        
+        .question-label {
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #2c3e50;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .skill-icon {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+        }
+        
+        .likert-scale {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+            background: white;
+            padding: 14px;
+            border-radius: 10px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+        }
+        
+        .likert-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            min-width: 80px;
+        }
+        
+        .likert-option input[type="radio"] {
+            cursor: pointer;
+            width: 22px;
+            height: 22px;
+            accent-color: #667eea;
+        }
+        
+        .likert-option label {
+            cursor: pointer;
+            margin: 0;
+            font-size: 12px;
+            text-align: center;
+            color: #555;
+        }
+        
+        .checkbox-group, .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 12px;
+            background: white;
+            padding: 14px;
+            border-radius: 10px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+        }
+        
+        .checkbox-item, .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .checkbox-item:hover, .radio-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .checkbox-item input[type="checkbox"],
+        .radio-item input[type="radio"] {
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            accent-color: #667eea;
+        }
+        
+        .checkbox-item label,
+        .radio-item label {
+            cursor: pointer;
+            margin: 0;
+            color: #2c3e50;
+        }
+        
+        textarea, input[type="text"], input[type="email"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e8eaf0;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            margin-top: 8px;
+            background: white;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+        
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .time-estimate-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 12px;
+            background: white;
+            padding: 14px;
+            border-radius: 10px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+        }
+        
+        .time-estimate-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .time-estimate-item label {
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-width: 160px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.35);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .pdf-btn {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            min-width: 160px;
+        }
+        
+        .pdf-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(17, 153, 142, 0.35);
+        }
+        
+        .reset-btn {
+            background: linear-gradient(135deg, #a8a8a8 0%, #6b6b6b 100%);
+            color: white;
+            min-width: 160px;
+        }
+        
+        .reset-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(107, 107, 107, 0.35);
+        }
+        
+        .report-section {
+            display: none;
+            margin-top: 40px;
+        }
+        
+        .report-section.show {
+            display: block;
+        }
+        
+        .report-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .priority-highlight {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe8cc 100%);
+            padding: 22px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 6px solid #ff9800;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.15);
+            border: 1px solid #ffe8cc;
+        }
+        
+        .priority-highlight h2 {
+            color: #e65100;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+        
+        .report-category {
+            margin-bottom: 25px;
+            padding: 22px;
+            background: linear-gradient(135deg, #f0f4ff 0%, #f5f0ff 100%);
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+            border: 1px solid #e8eaf0;
+        }
+        
+        .report-category h3 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tool-logo {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+        }
+        
+        .report-content {
+            color: #2c3e50;
+            line-height: 1.8;
+        }
+        
+        .success-message {
+            display: none;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid #c3e6cb;
+            box-shadow: 0 4px 15px rgba(21, 87, 36, 0.1);
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        .form-section {
+            display: block;
+        }
+        
+        .form-section.hide {
+            display: none;
+        }
+        
+        .form-section.show {
+            display: block;
+        }
+        
+        /* TABLE STYLING */
+        .language-table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+            margin-top: 12px;
+        }
+        
+        .language-table thead {
+            background: linear-gradient(135deg, #f0f2f5 0%, #e8eaf0 100%);
+        }
+        
+        .language-table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 700;
+            color: #2c3e50;
+            border-bottom: 2px solid #e8eaf0;
+        }
+        
+        .language-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e8eaf0;
+        }
+        
+        .language-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .language-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .time-estimate-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+            
+            .likert-scale {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .likert-option {
+                min-width: 100%;
+            }
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                border: none;
+            }
+            
+            .button-group {
+                display: none;
+            }
+            
+            .header .language-toggle {
+                display: none;
+            }
+            
+            .card {
+                break-inside: avoid;
+            }
+        }
+        
+        /* Animation */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .report-section.show {
+            animation: slideIn 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Language Toggle -->
+        <div class="header">
+            <h1 id="mainTitle">Data Analyst Assessment</h1>
+            <div class="language-toggle">
+                <button class="lang-btn active" onclick="setLanguage('en')">English</button>
+                <button class="lang-btn" onclick="setLanguage('es')">Español</button>
+            </div>
+        </div>
+        
+        <div class="success-message" id="successMessage"></div>
+        
+        <form id="assessmentForm" class="form-section">
+            <!-- SECTION 1: PERSONAL INFORMATION (NICKNAME ONLY) -->
+            <div class="section">
+                <div class="section-title" id="sec1">Section 1: Personal Information</div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="nicknameLabel">Nickname *</label>
+                    <input type="text" id="nickname" name="nickname" placeholder="Choose a nickname for this assessment" required>
+                </div>
+            </div>
+            
+            <!-- SECTION 2-11: TECHNICAL DOMAINS (Q1-Q25) -->
+            <!-- SQL Fundamentals -->
+            <div class="section">
+                <div class="section-title" id="sec2">Section 2: SQL Fundamentals</div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q1Label">Q1: I understand how to write basic SELECT queries with WHERE conditions</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q1_1" name="q1" value="1"><label for="q1_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q1_2" name="q1" value="2"><label for="q1_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q1_3" name="q1" value="3"><label for="q1_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q1_4" name="q1" value="4"><label for="q1_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q1_5" name="q1" value="5"><label for="q1_5">5</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q2Label">Q2: I can explain the difference between WHERE and HAVING clauses</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q2_1" name="q2" value="1"><label for="q2_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q2_2" name="q2" value="2"><label for="q2_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q2_3" name="q2" value="3"><label for="q2_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q2_4" name="q2" value="4"><label for="q2_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q2_5" name="q2" value="5"><label for="q2_5">5</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q3Label">Q3: I feel confident using ORDER BY with multiple columns and ASC/DESC</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q3_1" name="q3" value="1"><label for="q3_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q3_2" name="q3" value="2"><label for="q3_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q3_3" name="q3" value="3"><label for="q3_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q3_4" name="q3" value="4"><label for="q3_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q3_5" name="q3" value="5"><label for="q3_5">5</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SQL JOINs (Q4-Q6) -->
+            <div class="section">
+                <div class="section-title" id="sec3">Section 3: SQL JOINs</div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q4Label">Q4: I can correctly identify when to use INNER vs LEFT vs RIGHT JOINs</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q4_1" name="q4" value="1"><label for="q4_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q4_2" name="q4" value="2"><label for="q4_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q4_3" name="q4" value="3"><label for="q4_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q4_4" name="q4" value="4"><label for="q4_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q4_5" name="q4" value="5"><label for="q4_5">5</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q5Label">Q5: I understand Primary Keys and Foreign Keys and their role in JOIN operations</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q5_1" name="q5" value="1"><label for="q5_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q5_2" name="q5" value="2"><label for="q5_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q5_3" name="q5" value="3"><label for="q5_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q5_4" name="q5" value="4"><label for="q5_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q5_5" name="q5" value="5"><label for="q5_5">5</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q6Label">Q6: I can write and debug a query with 3 or more table JOINs</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q6_1" name="q6" value="1"><label for="q6_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q6_2" name="q6" value="2"><label for="q6_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q6_3" name="q6" value="3"><label for="q6_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q6_4" name="q6" value="4"><label for="q6_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q6_5" name="q6" value="5"><label for="q6_5">5</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SQL Aggregation (Q7-Q8) -->
+            <div class="section">
+                <div class="section-title" id="sec4">Section 4: SQL Aggregation</div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q7Label">Q7: I can write GROUP BY queries with COUNT, SUM, AVG, MIN, MAX functions</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q7_1" name="q7" value="1"><label for="q7_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q7_2" name="q7" value="2"><label for="q7_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q7_3" name="q7" value="3"><label for="q7_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q7_4" name="q7" value="4"><label for="q7_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q7_5" name="q7" value="5"><label for="q7_5">5</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q8Label">Q8: I understand why certain columns must appear in GROUP BY clause</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q8_1" name="q8" value="1"><label for="q8_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q8_2" name="q8" value="2"><label for="q8_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q8_3" name="q8" value="3"><label for="q8_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q8_4" name="q8" value="4"><label for="q8_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q8_5" name="q8" value="5"><label for="q8_5">5</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SQL Advanced (Q9-Q11) -->
+            <div class="section">
+                <div class="section-title" id="sec5">Section 5: SQL Advanced</div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q9Label">Q9: I can write and understand subqueries in WHERE and FROM clauses</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q9_1" name="q9" value="1"><label for="q9_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q9_2" name="q9" value="2"><label for="q9_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q9_3" name="q9" value="3"><label for="q9_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q9_4" name="q9" value="4"><label for="q9_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q9_5" name="q9" value="5"><label for="q9_5">5</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q10Label">Q10: I know when to use a JOIN instead of a subquery</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q10_1" name="q10" value="1"><label for="q10_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q10_2" name="q10" value="2"><label for="q10_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q10_3" name="q10" value="3"><label for="q10_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q10_4" name="q10" value="4"><label for="q10_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q10_5" name="q10" value="5"><label for="q10_5">5</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q11Label">Q11: I can use UNION and understand the difference from UNION ALL</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q11_1" name="q11" value="1"><label for="q11_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q11_2" name="q11" value="2"><label for="q11_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q11_3" name="q11" value="3"><label for="q11_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q11_4" name="q11" value="4"><label for="q11_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q11_5" name="q11" value="5"><label for="q11_5">5</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Python Fundamentals (Q12-Q15) -->
+            <div class="section">
+                <div class="section-title" id="sec6">Section 6: Python Fundamentals</div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q12Label">Q12: I understand Python data types (strings, integers, floats, lists, dictionaries)</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q12_1" name="q12" value="1"><label for="q12_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q12_2" name="q12" value="2"><label for="q12_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q12_3" name="q12" value="3"><label for="q12_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q12_4" name="q12" value="4"><label for="q12_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q12_5" name="q12" value="5"><label for="q12_5">5</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q13Label">Q13: I can write if/else statements and for/while loops correctly</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q13_1" name="q13" value="1"><label for="q13_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q13_2" name="q13" value="2"><label for="q13_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q13_3" name="q13" value="3"><label for="q13_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q13_4" name="q13" value="4"><label for="q13_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q13_5" name="q13" value="5"><label for="q13_5">5</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q14Label">Q14: I can write functions with parameters and return statements</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q14_1" name="q14" value="1"><label for="q14_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q14_2" name="q14" value="2"><label for="q14_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q14_3" name="q14" value="3"><label for="q14_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q14_4" name="q14" value="4"><label for="q14_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q14_5" name="q14" value="5"><label for="q14_5">5</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q15Label">Q15: I understand list comprehensions and can use them effectively</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q15_1" name="q15" value="1"><label for="q15_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q15_2" name="q15" value="2"><label for="q15_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q15_3" name="q15" value="3"><label for="q15_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q15_4" name="q15" value="4"><label for="q15_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q15_5" name="q15" value="5"><label for="q15_5">5</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pandas Data Analysis (Q16-Q18) -->
+            <div class="section">
+                <div class="section-title" id="sec7">Section 7: Pandas Data Analysis</div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q16Label">Q16: I can load a CSV file and explore data using Pandas basic methods</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q16_1" name="q16" value="1"><label for="q16_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q16_2" name="q16" value="2"><label for="q16_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q16_3" name="q16" value="3"><label for="q16_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q16_4" name="q16" value="4"><label for="q16_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q16_5" name="q16" value="5"><label for="q16_5">5</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q17Label">Q17: I can filter DataFrames using boolean indexing and conditions</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q17_1" name="q17" value="1"><label for="q17_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q17_2" name="q17" value="2"><label for="q17_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q17_3" name="q17" value="3"><label for="q17_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q17_4" name="q17" value="4"><label for="q17_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q17_5" name="q17" value="5"><label for="q17_5">5</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q18Label">Q18: I understand how to handle missing values (NaN) in Pandas</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q18_1" name="q18" value="1"><label for="q18_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q18_2" name="q18" value="2"><label for="q18_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q18_3" name="q18" value="3"><label for="q18_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q18_4" name="q18" value="4"><label for="q18_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q18_5" name="q18" value="5"><label for="q18_5">5</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Power BI Modeling (Q19-Q20) -->
+            <div class="section">
+                <div class="section-title" id="sec8">Section 8: Power BI Modeling</div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q19Label">Q19: I understand star schema and can identify fact and dimension tables</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q19_1" name="q19" value="1"><label for="q19_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q19_2" name="q19" value="2"><label for="q19_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q19_3" name="q19" value="3"><label for="q19_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q19_4" name="q19" value="4"><label for="q19_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q19_5" name="q19" value="5"><label for="q19_5">5</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q20Label">Q20: I can create relationships between tables in Power BI correctly</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q20_1" name="q20" value="1"><label for="q20_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q20_2" name="q20" value="2"><label for="q20_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q20_3" name="q20" value="3"><label for="q20_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q20_4" name="q20" value="4"><label for="q20_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q20_5" name="q20" value="5"><label for="q20_5">5</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Power BI Visualization (Q21-Q22) -->
+            <div class="section">
+                <div class="section-title" id="sec9">Section 9: Power BI Visualization</div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q21Label">Q21: I can choose the right chart type for different data analysis needs</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q21_1" name="q21" value="1"><label for="q21_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q21_2" name="q21" value="2"><label for="q21_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q21_3" name="q21" value="3"><label for="q21_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q21_4" name="q21" value="4"><label for="q21_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q21_5" name="q21" value="5"><label for="q21_5">5</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q22Label">Q22: I can create interactive dashboards with filters and slicers</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q22_1" name="q22" value="1"><label for="q22_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q22_2" name="q22" value="2"><label for="q22_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q22_3" name="q22" value="3"><label for="q22_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q22_4" name="q22" value="4"><label for="q22_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q22_5" name="q22" value="5"><label for="q22_5">5</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cross-Domain Integration (Q23-Q25) -->
+            <div class="section">
+                <div class="section-title" id="sec10">Section 10: Cross-Domain Integration</div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q23Label">Q23: I feel overwhelmed by the amount of content and concepts to learn</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q23_1" name="q23" value="1"><label for="q23_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q23_2" name="q23" value="2"><label for="q23_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q23_3" name="q23" value="3"><label for="q23_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q23_4" name="q23" value="4"><label for="q23_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q23_5" name="q23" value="5"><label for="q23_5">5</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q24Label">Q24: I struggle to connect concepts between SQL, Python, and Power BI</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q24_1" name="q24" value="1"><label for="q24_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q24_2" name="q24" value="2"><label for="q24_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q24_3" name="q24" value="3"><label for="q24_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q24_4" name="q24" value="4"><label for="q24_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q24_5" name="q24" value="5"><label for="q24_5">5</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q25Label">Q25: I need more hands-on practice with real-world datasets</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q25_1" name="q25" value="1"><label for="q25_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q25_2" name="q25" value="2"><label for="q25_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q25_3" name="q25" value="3"><label for="q25_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q25_4" name="q25" value="4"><label for="q25_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q25_5" name="q25" value="5"><label for="q25_5">5</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Concept Understanding (Q26-Q27) -->
+            <div class="section">
+                <div class="section-title" id="sec11">Section 11: Concept Understanding</div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q26Label">Q26 (TRUE/FALSE): In a LEFT JOIN, if a row exists in the left table but not in the right table, the columns from the right table will show NULL values</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="q26_true" name="q26" value="true"><label for="q26_true" id="q26_trueLabel">True</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="q26_false" name="q26" value="false"><label for="q26_false" id="q26_falseLabel">False</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q27Label">Q27 (TRUE/FALSE): A PRIMARY KEY must always be a single column</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="q27_true" name="q27" value="true"><label for="q27_true" id="q27_trueLabel">True</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="q27_false" name="q27" value="false"><label for="q27_false" id="q27_falseLabel">False</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Schema Design (Q28-Q29) -->
+            <div class="section">
+                <div class="section-title" id="sec12">Section 12: Schema Design & Relationships</div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q28Label">Q28: How comfortable are you with drawing and explaining database schema relationships (PKs, FKs, cardinality)?</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q28_1" name="q28" value="1"><label for="q28_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q28_2" name="q28" value="2"><label for="q28_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q28_3" name="q28" value="3"><label for="q28_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q28_4" name="q28" value="4"><label for="q28_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q28_5" name="q28" value="5"><label for="q28_5">5</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q29Label">Q29: How confident are you in identifying one-to-many vs many-to-many relationships in real databases?</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q29_1" name="q29" value="1"><label for="q29_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q29_2" name="q29" value="2"><label for="q29_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q29_3" name="q29" value="3"><label for="q29_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q29_4" name="q29" value="4"><label for="q29_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q29_5" name="q29" value="5"><label for="q29_5">5</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Table Design (Q30-Q31) - MODIFIED WITH TABLE FORMAT -->
+            <div class="section">
+                <div class="section-title" id="sec13">Section 13: Table Design & Optimization</div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q30Label">Q30: How comfortable are you designing table structures?</label>
+                    <table class="language-table">
+                        <thead>
+                            <tr>
+                                <th id="q30_aspect">Aspect</th>
+                                <th id="q30_1">1</th>
+                                <th id="q30_2">2</th>
+                                <th id="q30_3">3</th>
+                                <th id="q30_4">4</th>
+                                <th id="q30_5">5</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="q30a_label">Naming columns appropriately</td>
+                                <td><input type="radio" name="q30a" value="1"></td>
+                                <td><input type="radio" name="q30a" value="2"></td>
+                                <td><input type="radio" name="q30a" value="3"></td>
+                                <td><input type="radio" name="q30a" value="4"></td>
+                                <td><input type="radio" name="q30a" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td id="q30b_label">Choosing appropriate data types</td>
+                                <td><input type="radio" name="q30b" value="1"></td>
+                                <td><input type="radio" name="q30b" value="2"></td>
+                                <td><input type="radio" name="q30b" value="3"></td>
+                                <td><input type="radio" name="q30b" value="4"></td>
+                                <td><input type="radio" name="q30b" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td id="q30c_label">Setting indexes effectively</td>
+                                <td><input type="radio" name="q30c" value="1"></td>
+                                <td><input type="radio" name="q30c" value="2"></td>
+                                <td><input type="radio" name="q30c" value="3"></td>
+                                <td><input type="radio" name="q30c" value="4"></td>
+                                <td><input type="radio" name="q30c" value="5"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q31Label">Q31: How confident are you in optimizing data organization?</label>
+                    <table class="language-table">
+                        <thead>
+                            <tr>
+                                <th id="q31_aspect">Aspect</th>
+                                <th id="q31_1">1</th>
+                                <th id="q31_2">2</th>
+                                <th id="q31_3">3</th>
+                                <th id="q31_4">4</th>
+                                <th id="q31_5">5</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="q31a_label">Normalization principles</td>
+                                <td><input type="radio" name="q31a" value="1"></td>
+                                <td><input type="radio" name="q31a" value="2"></td>
+                                <td><input type="radio" name="q31a" value="3"></td>
+                                <td><input type="radio" name="q31a" value="4"></td>
+                                <td><input type="radio" name="q31a" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td id="q31b_label">Indexing strategy</td>
+                                <td><input type="radio" name="q31b" value="1"></td>
+                                <td><input type="radio" name="q31b" value="2"></td>
+                                <td><input type="radio" name="q31b" value="3"></td>
+                                <td><input type="radio" name="q31b" value="4"></td>
+                                <td><input type="radio" name="q31b" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td id="q31c_label">Query optimization</td>
+                                <td><input type="radio" name="q31c" value="1"></td>
+                                <td><input type="radio" name="q31c" value="2"></td>
+                                <td><input type="radio" name="q31c" value="3"></td>
+                                <td><input type="radio" name="q31c" value="4"></td>
+                                <td><input type="radio" name="q31c" value="5"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Tool Proficiency (Q32-Q33) -->
+            <div class="section">
+                <div class="section-title" id="sec14">Section 14: Tool Proficiency</div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q32Label">Q32: Which tools are you familiar with? (Select all that apply)</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q32a" name="q32" value="MySQL"><label for="q32a" id="q32a_label">MySQL Workbench</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q32b" name="q32" value="PowerBI"><label for="q32b" id="q32b_label">Power BI</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q32c" name="q32" value="VSCode"><label for="q32c" id="q32c_label">VS Code</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q32d" name="q32" value="Jupyter"><label for="q32d" id="q32d_label">Jupyter</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q32e" name="q32" value="Tableau"><label for="q32e" id="q32e_label">Tableau</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q32f" name="q32" value="R"><label for="q32f" id="q32f_label">R</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q32g" name="q32" value="Python"><label for="q32g" id="q32g_label">Python</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q32h" name="q32" value="Excel"><label for="q32h" id="q32h_label">Excel</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q33Label">Q33: How quickly do you typically learn new software tools?</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q33_1" name="q33" value="1"><label for="q33_1">1</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q33_2" name="q33" value="2"><label for="q33_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q33_3" name="q33" value="3"><label for="q33_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q33_4" name="q33" value="4"><label for="q33_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q33_5" name="q33" value="5"><label for="q33_5">5</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Language Proficiency (Q34) - MODIFIED WITH TABLE FORMAT -->
+            <div class="section">
+                <div class="section-title" id="sec15">Section 15: Language Proficiency</div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q34Label">Q34: How comfortable are you understanding data analytics terminology?</label>
+                    <table class="language-table">
+                        <thead>
+                            <tr>
+                                <th id="q34_language">Language</th>
+                                <th id="q34_1">1</th>
+                                <th id="q34_2">2</th>
+                                <th id="q34_3">3</th>
+                                <th id="q34_4">4</th>
+                                <th id="q34_5">5</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="q34a_label">English</td>
+                                <td><input type="radio" name="q34a" value="1"></td>
+                                <td><input type="radio" name="q34a" value="2"></td>
+                                <td><input type="radio" name="q34a" value="3"></td>
+                                <td><input type="radio" name="q34a" value="4"></td>
+                                <td><input type="radio" name="q34a" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td id="q34b_label">Spanish (Español)</td>
+                                <td><input type="radio" name="q34b" value="1"></td>
+                                <td><input type="radio" name="q34b" value="2"></td>
+                                <td><input type="radio" name="q34b" value="3"></td>
+                                <td><input type="radio" name="q34b" value="4"></td>
+                                <td><input type="radio" name="q34b" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td id="q34c_label">Catalan (Català)</td>
+                                <td><input type="radio" name="q34c" value="1"></td>
+                                <td><input type="radio" name="q34c" value="2"></td>
+                                <td><input type="radio" name="q34c" value="3"></td>
+                                <td><input type="radio" name="q34c" value="4"></td>
+                                <td><input type="radio" name="q34c" value="5"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Job Role Understanding (Q35-Q36) -->
+            <div class="section">
+                <div class="section-title" id="sec16">Section 16: Job Role Understanding</div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q35Label">Q35: Which aspects of a data analyst's job interest you most? (Select your top 3)</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q35a" name="q35" value="technical"><label for="q35a" id="q35a_label">Technical SQL coding</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q35b" name="q35" value="visualization"><label for="q35b" id="q35b_label">Data visualization design</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q35c" name="q35" value="ml"><label for="q35c" id="q35c_label">Machine learning modeling</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q35d" name="q35" value="communication"><label for="q35d" id="q35d_label">Business communication</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q35e" name="q35" value="dashboard"><label for="q35e" id="q35e_label">Dashboard creation</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="q35f" name="q35" value="statistics"><label for="q35f" id="q35f_label">Statistical analysis</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q36Label">Q36: Rate your interest in each aspect of the data analyst role</label>
+                    <table class="language-table">
+                        <thead>
+                            <tr>
+                                <th id="q36_aspect">Aspect</th>
+                                <th id="q36_1">1</th>
+                                <th id="q36_2">2</th>
+                                <th id="q36_3">3</th>
+                                <th id="q36_4">4</th>
+                                <th id="q36_5">5</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="q36a_label">Technical coding</td>
+                                <td><input type="radio" name="q36a" value="1"></td>
+                                <td><input type="radio" name="q36a" value="2"></td>
+                                <td><input type="radio" name="q36a" value="3"></td>
+                                <td><input type="radio" name="q36a" value="4"></td>
+                                <td><input type="radio" name="q36a" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td id="q36b_label">Data visualization</td>
+                                <td><input type="radio" name="q36b" value="1"></td>
+                                <td><input type="radio" name="q36b" value="2"></td>
+                                <td><input type="radio" name="q36b" value="3"></td>
+                                <td><input type="radio" name="q36b" value="4"></td>
+                                <td><input type="radio" name="q36b" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td id="q36c_label">Communication/Presenting</td>
+                                <td><input type="radio" name="q36c" value="1"></td>
+                                <td><input type="radio" name="q36c" value="2"></td>
+                                <td><input type="radio" name="q36c" value="3"></td>
+                                <td><input type="radio" name="q36c" value="4"></td>
+                                <td><input type="radio" name="q36c" value="5"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Time Pressure & Stress (Q37) - MODIFIED SPLIT -->
+            <div class="section">
+                <div class="section-title" id="sec17">Section 17: Stress Management & Performance</div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q37aLabel">Q37.1: How do you typically perform under time pressure?</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q37a_1" name="q37a" value="1"><label for="q37a_1" id="q37a_label_1">1 - Feel calm</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q37a_2" name="q37a" value="2"><label for="q37a_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q37a_3" name="q37a" value="3"><label for="q37a_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q37a_4" name="q37a" value="4"><label for="q37a_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q37a_5" name="q37a" value="5"><label for="q37a_5" id="q37a_label_5">5 - Feel tension</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q37bLabel">Q37.2: How did you feel during the exam?</label>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" id="q37b_1" name="q37b" value="1"><label for="q37b_1" id="q37b_label_1">1 - Calm</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q37b_2" name="q37b" value="2"><label for="q37b_2">2</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q37b_3" name="q37b" value="3"><label for="q37b_3">3</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q37b_4" name="q37b" value="4"><label for="q37b_4">4</label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" id="q37b_5" name="q37b" value="5"><label for="q37b_5" id="q37b_label_5">5 - Very nervous/tensioned</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q37cLabel">Q37.3: How much time did you typically need to perform homework tasks?</label>
+                    <div class="time-estimate-grid">
+                        <div class="time-estimate-item">
+                            <label for="q37c1" id="q37c1Label">SQL tasks (hours)</label>
+                            <input type="number" id="q37c1" name="q37c1" min="0.5" step="0.5" placeholder="e.g., 2.5">
+                        </div>
+                        <div class="time-estimate-item">
+                            <label for="q37c2" id="q37c2Label">PowerBI tasks (hours)</label>
+                            <input type="number" id="q37c2" name="q37c2" min="0.5" step="0.5" placeholder="e.g., 2">
+                        </div>
+                        <div class="time-estimate-item">
+                            <label for="q37c3" id="q37c3Label">Python tasks (hours)</label>
+                            <input type="number" id="q37c3" name="q37c3" min="0.5" step="0.5" placeholder="e.g., 3">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Future Readiness (Q38) - MODIFIED REWRITTEN -->
+            <div class="section">
+                <div class="section-title" id="sec18">Section 18: Future Readiness Assessment</div>
+                
+                <div class="card question-group">
+                    <label class="question-label" id="q38Label">Q38: Estimate the time you would need to complete key tasks (approximate hours) in real life, being at your current level of preparedness:</label>
+                    <div class="time-estimate-grid">
+                        <div class="time-estimate-item">
+                            <label for="q38a" id="q38aLabel">Complex SQL query (typical: 1-2 hours)</label>
+                            <input type="number" id="q38a" name="q38a" min="0.5" step="0.5" placeholder="hours">
+                        </div>
+                        <div class="time-estimate-item">
+                            <label for="q38b" id="q38bLabel">Create Power BI dashboard (typical: 2-3 hours)</label>
+                            <input type="number" id="q38b" name="q38b" min="0.5" step="0.5" placeholder="hours">
+                        </div>
+                        <div class="time-estimate-item">
+                            <label for="q38c" id="q38cLabel">Python data processing script (typical: 2-4 hours)</label>
+                            <input type="number" id="q38c" name="q38c" min="0.5" step="0.5" placeholder="hours">
+                        </div>
+                        <div class="time-estimate-item">
+                            <label for="q38d" id="q38dLabel">Debugging technical issue (typical: 1-2 hours)</label>
+                            <input type="number" id="q38d" name="q38d" min="0.5" step="0.5" placeholder="hours">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Buttons -->
+            <div class="button-group">
+                <button type="submit" class="submit-btn" id="submitBtn">Submit Assessment</button>
+                <button type="reset" class="reset-btn" id="resetBtn">Clear Form</button>
+            </div>
+        </form>
+        
+        <!-- Assessment Report -->
+        <div class="report-section" id="reportSection">
+            <div class="report-title" id="reportTitle">Assessment Report</div>
+            
+            <!-- Priority: Stress Management & Task Understanding -->
+            <div class="priority-highlight">
+                <h2 id="stressTitle">🎯 Key Finding: Stress Management & Task Understanding</h2>
+                <div class="report-content" id="stressContent"></div>
+            </div>
+            
+            <!-- SQL Assessment -->
+            <div class="report-category">
+                <h3 id="sqlReportTitle">
+                    <img class="tool-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23336791'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z'/%3E%3C/svg%3E" alt="SQL">
+                    SQL Assessment
+                </h3>
+                <div class="report-content" id="sqlReportContent"></div>
+            </div>
+            
+            <!-- Python Assessment -->
+            <div class="report-category">
+                <h3 id="pythonReportTitle">
+                    <img class="tool-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233776ab'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z'/%3E%3C/svg%3E" alt="Python">
+                    Python Assessment
+                </h3>
+                <div class="report-content" id="pythonReportContent"></div>
+            </div>
+            
+            <!-- PowerBI Assessment -->
+            <div class="report-category">
+                <h3 id="powerbiReportTitle">
+                    <img class="tool-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f2c811'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z'/%3E%3C/svg%3E" alt="Power BI">
+                    Power BI Assessment
+                </h3>
+                <div class="report-content" id="powerbiReportContent"></div>
+            </div>
+            
+            <!-- Technical Readiness -->
+            <div class="report-category">
+                <h3 id="readinessTitle">💼 Technical Readiness</h3>
+                <div class="report-content" id="readinessContent"></div>
+            </div>
+            
+            <!-- Recommendations -->
+            <div class="report-category">
+                <h3 id="recommendationsTitle">✨ Recommendations</h3>
+                <div class="report-content" id="recommendationsContent"></div>
+            </div>
+            
+            <div class="button-group" style="margin-top: 30px;">
+                <button type="button" class="pdf-btn" onclick="generatePDF()" id="downloadPdfBtn">Download as PDF</button>
+                <button type="button" class="reset-btn" onclick="resetAssessment()" id="newAssessmentBtn">Start New Assessment</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Language data structure
+        const translations = {
+            en: {
+                mainTitle: "Data Analyst Assessment - SQL, Python & Power BI",
+                nicknameLabel: "Nickname *",
+                sec1: "Section 1: Personal Information",
+                sec2: "Section 2: SQL Fundamentals",
+                sec3: "Section 3: SQL JOINs",
+                sec4: "Section 4: SQL Aggregation",
+                sec5: "Section 5: SQL Advanced",
+                sec6: "Section 6: Python Fundamentals",
+                sec7: "Section 7: Pandas Data Analysis",
+                sec8: "Section 8: Power BI Modeling",
+                sec9: "Section 9: Power BI Visualization",
+                sec10: "Section 10: Cross-Domain Integration",
+                sec11: "Section 11: Concept Understanding",
+                sec12: "Section 12: Schema Design & Relationships",
+                sec13: "Section 13: Table Design & Optimization",
+                sec14: "Section 14: Tool Proficiency",
+                sec15: "Section 15: Language Proficiency",
+                sec16: "Section 16: Job Role Understanding",
+                sec17: "Section 17: Stress Management & Performance",
+                sec18: "Section 18: Future Readiness Assessment",
+                q1Label: "Q1: I understand how to write basic SELECT queries with WHERE conditions",
+                q2Label: "Q2: I can explain the difference between WHERE and HAVING clauses",
+                q3Label: "Q3: I feel confident using ORDER BY with multiple columns and ASC/DESC",
+                q4Label: "Q4: I can correctly identify when to use INNER vs LEFT vs RIGHT JOINs",
+                q5Label: "Q5: I understand Primary Keys and Foreign Keys and their role in JOIN operations",
+                q6Label: "Q6: I can write and debug a query with 3 or more table JOINs",
+                q7Label: "Q7: I can write GROUP BY queries with COUNT, SUM, AVG, MIN, MAX functions",
+                q8Label: "Q8: I understand why certain columns must appear in GROUP BY clause",
+                q9Label: "Q9: I can write and understand subqueries in WHERE and FROM clauses",
+                q10Label: "Q10: I know when to use a JOIN instead of a subquery",
+                q11Label: "Q11: I can use UNION and understand the difference from UNION ALL",
+                q12Label: "Q12: I understand Python data types (strings, integers, floats, lists, dictionaries)",
+                q13Label: "Q13: I can write if/else statements and for/while loops correctly",
+                q14Label: "Q14: I can write functions with parameters and return statements",
+                q15Label: "Q15: I understand list comprehensions and can use them effectively",
+                q16Label: "Q16: I can load a CSV file and explore data using Pandas basic methods",
+                q17Label: "Q17: I can filter DataFrames using boolean indexing and conditions",
+                q18Label: "Q18: I understand how to handle missing values (NaN) in Pandas",
+                q19Label: "Q19: I understand star schema and can identify fact and dimension tables",
+                q20Label: "Q20: I can create relationships between tables in Power BI correctly",
+                q21Label: "Q21: I can choose the right chart type for different data analysis needs",
+                q22Label: "Q22: I can create interactive dashboards with filters and slicers",
+                q23Label: "Q23: I feel overwhelmed by the amount of content and concepts to learn",
+                q24Label: "Q24: I struggle to connect concepts between SQL, Python, and Power BI",
+                q25Label: "Q25: I need more hands-on practice with real-world datasets",
+                q26Label: "Q26 (TRUE/FALSE): In a LEFT JOIN, if a row exists in the left table but not in the right table, the columns from the right table will show NULL values",
+                q27Label: "Q27 (TRUE/FALSE): A PRIMARY KEY must always be a single column",
+                q28Label: "Q28: How comfortable are you with drawing and explaining database schema relationships (PKs, FKs, cardinality)?",
+                q29Label: "Q29: How confident are you in identifying one-to-many vs many-to-many relationships in real databases?",
+                q30Label: "Q30: How comfortable are you designing table structures?",
+                q30_aspect: "Aspect",
+                q30a_label: "Naming columns appropriately",
+                q30b_label: "Choosing appropriate data types",
+                q30c_label: "Setting indexes effectively",
+                q31Label: "Q31: How confident are you in optimizing data organization?",
+                q31_aspect: "Aspect",
+                q31a_label: "Normalization principles",
+                q31b_label: "Indexing strategy",
+                q31c_label: "Query optimization",
+                q32Label: "Q32: Which tools are you familiar with? (Select all that apply)",
+                q32a_label: "MySQL Workbench",
+                q32b_label: "Power BI",
+                q32c_label: "VS Code",
+                q32d_label: "Jupyter",
+                q32e_label: "Tableau",
+                q32f_label: "R",
+                q32g_label: "Python",
+                q32h_label: "Excel",
+                q33Label: "Q33: How quickly do you typically learn new software tools?",
+                q34Label: "Q34: How comfortable are you understanding data analytics terminology?",
+                q34_language: "Language",
+                q34a_label: "English",
+                q34b_label: "Spanish (Español)",
+                q34c_label: "Catalan (Català)",
+                q35Label: "Q35: Which aspects of a data analyst's job interest you most? (Select your top 3)",
+                q35a_label: "Technical SQL coding",
+                q35b_label: "Data visualization design",
+                q35c_label: "Machine learning modeling",
+                q35d_label: "Business communication",
+                q35e_label: "Dashboard creation",
+                q35f_label: "Statistical analysis",
+                q36Label: "Q36: Rate your interest in each aspect of the data analyst role",
+                q36_aspect: "Aspect",
+                q36a_label: "Technical coding",
+                q36b_label: "Data visualization",
+                q36c_label: "Communication/Presenting",
+                q37aLabel: "Q37.1: How do you typically perform under time pressure?",
+                q37a_label_1: "1 - Feel calm",
+                q37a_label_5: "5 - Feel tension",
+                q37bLabel: "Q37.2: How did you feel during the exam?",
+                q37b_label_1: "1 - Calm",
+                q37b_label_5: "5 - Very nervous/tensioned",
+                q37cLabel: "Q37.3: How much time did you typically need to perform homework tasks?",
+                q37c1Label: "SQL tasks (hours)",
+                q37c2Label: "PowerBI tasks (hours)",
+                q37c3Label: "Python tasks (hours)",
+                q38Label: "Q38: Estimate the time you would need to complete key tasks (approximate hours) in real life, being at your current level of preparedness:",
+                q38aLabel: "Complex SQL query (typical: 1-2 hours)",
+                q38bLabel: "Create Power BI dashboard (typical: 2-3 hours)",
+                q38cLabel: "Python data processing script (typical: 2-4 hours)",
+                q38dLabel: "Debugging technical issue (typical: 1-2 hours)",
+                q26_trueLabel: "True",
+                q26_falseLabel: "False",
+                q27_trueLabel: "True",
+                q27_falseLabel: "False",
+                submitBtn: "Submit Assessment",
+                resetBtn: "Clear Form",
+                reportTitle: "Assessment Report",
+                stressTitle: "🎯 Key Finding: Stress Management & Task Understanding",
+                sqlReportTitle: "SQL Assessment",
+                pythonReportTitle: "Python Assessment",
+                powerbiReportTitle: "Power BI Assessment",
+                readinessTitle: "💼 Technical Readiness",
+                recommendationsTitle: "✨ Recommendations",
+                downloadPdfBtn: "Download as PDF",
+                newAssessmentBtn: "Start New Assessment"
+            },
+            es: {
+                mainTitle: "Evaluación de Analista de Datos - SQL, Python y Power BI",
+                nicknameLabel: "Apodo *",
+                sec1: "Sección 1: Información Personal",
+                sec2: "Sección 2: Fundamentos de SQL",
+                sec3: "Sección 3: JOINs en SQL",
+                sec4: "Sección 4: Agregación SQL",
+                sec5: "Sección 5: SQL Avanzado",
+                sec6: "Sección 6: Fundamentos de Python",
+                sec7: "Sección 7: Análisis de Datos con Pandas",
+                sec8: "Sección 8: Modelado de Power BI",
+                sec9: "Sección 9: Visualización con Power BI",
+                sec10: "Sección 10: Integración entre Dominios",
+                sec11: "Sección 11: Comprensión de Conceptos",
+                sec12: "Sección 12: Diseño de Esquemas y Relaciones",
+                sec13: "Sección 13: Diseño de Tablas y Optimización",
+                sec14: "Sección 14: Dominio de Herramientas",
+                sec15: "Sección 15: Competencia en Idiomas",
+                sec16: "Sección 16: Comprensión del Rol Laboral",
+                sec17: "Sección 17: Gestión del Estrés y Rendimiento",
+                sec18: "Sección 18: Evaluación de Preparación Futura",
+                nicknameLabel: "Apodo *",
+                q1Label: "P1: Entiendo cómo escribir consultas SELECT básicas con condiciones WHERE",
+                q2Label: "P2: Puedo explicar la diferencia entre las cláusulas WHERE y HAVING",
+                q3Label: "P3: Me siento seguro usando ORDER BY con múltiples columnas y ASC/DESC",
+                q4Label: "P4: Puedo identificar correctamente cuándo usar INNER vs LEFT vs RIGHT JOINs",
+                q5Label: "P5: Entiendo las Claves Primarias y Externas y su rol en operaciones JOIN",
+                q6Label: "P6: Puedo escribir y depurar una consulta con 3 o más JOINs de tablas",
+                q7Label: "P7: Puedo escribir consultas GROUP BY con funciones COUNT, SUM, AVG, MIN, MAX",
+                q8Label: "P8: Entiendo por qué ciertas columnas deben aparecer en la cláusula GROUP BY",
+                q9Label: "P9: Puedo escribir y entender subconsultas en cláusulas WHERE y FROM",
+                q10Label: "P10: Sé cuándo usar un JOIN en lugar de una subconsulta",
+                q11Label: "P11: Puedo usar UNION y entiendo la diferencia con UNION ALL",
+                q12Label: "P12: Entiendo los tipos de datos de Python (cadenas, enteros, flotantes, listas, diccionarios)",
+                q13Label: "P13: Puedo escribir correctamente sentencias if/else y bucles for/while",
+                q14Label: "P14: Puedo escribir funciones con parámetros y sentencias return",
+                q15Label: "P15: Entiendo las comprensiones de lista y puedo usarlas efectivamente",
+                q16Label: "P16: Puedo cargar un archivo CSV y explorar datos usando métodos básicos de Pandas",
+                q17Label: "P17: Puedo filtrar DataFrames usando indexing booleano y condiciones",
+                q18Label: "P18: Entiendo cómo manejar valores faltantes (NaN) en Pandas",
+                q19Label: "P19: Entiendo el esquema de estrella y puedo identificar tablas de hechos y dimensiones",
+                q20Label: "P20: Puedo crear correctamente relaciones entre tablas en Power BI",
+                q21Label: "P21: Puedo elegir el tipo de gráfico correcto para diferentes necesidades de análisis",
+                q22Label: "P22: Puedo crear dashboards interactivos con filtros y segmentadores",
+                q23Label: "P23: Me siento abrumado por la cantidad de contenido y conceptos a aprender",
+                q24Label: "P24: Me cuesta conectar conceptos entre SQL, Python y Power BI",
+                q25Label: "P25: Necesito más práctica práctica con conjuntos de datos del mundo real",
+                q26Label: "P26 (VERDADERO/FALSO): En un LEFT JOIN, si existe una fila en la tabla izquierda pero no en la derecha, las columnas de la tabla derecha mostrarán valores NULL",
+                q27Label: "P27 (VERDADERO/FALSO): Una CLAVE PRIMARIA siempre debe ser una sola columna",
+                q28Label: "P28: ¿Qué tan cómodo eres dibujando y explicando relaciones de esquema de base de datos?",
+                q29Label: "P29: ¿Qué tan seguro eres identificando relaciones uno-a-muchos vs muchos-a-muchos?",
+                q30Label: "P30: ¿Qué tan cómodo eres diseñando estructuras de tabla?",
+                q30_aspect: "Aspecto",
+                q30a_label: "Nombrar columnas apropiadamente",
+                q30b_label: "Elegir tipos de datos apropiados",
+                q30c_label: "Establecer índices efectivamente",
+                q31Label: "P31: ¿Qué tan seguro eres optimizando la organización de datos?",
+                q31_aspect: "Aspecto",
+                q31a_label: "Principios de normalización",
+                q31b_label: "Estrategia de indexación",
+                q31c_label: "Optimización de consultas",
+                q32Label: "P32: ¿Con qué herramientas estás familiarizado? (Selecciona todo lo que corresponda)",
+                q32a_label: "MySQL Workbench",
+                q32b_label: "Power BI",
+                q32c_label: "VS Code",
+                q32d_label: "Jupyter",
+                q32e_label: "Tableau",
+                q32f_label: "R",
+                q32g_label: "Python",
+                q32h_label: "Excel",
+                q33Label: "P33: ¿Qué tan rápido típicamente aprendes nuevas herramientas de software?",
+                q34Label: "P34: ¿Qué tan cómodo eres entendiendo terminología de análisis de datos?",
+                q34_language: "Idioma",
+                q34a_label: "Inglés",
+                q34b_label: "Español",
+                q34c_label: "Catalán (Català)",
+                q35Label: "P35: ¿Qué aspectos del trabajo de analista de datos te interesan más? (Selecciona tus 3 principales)",
+                q35a_label: "Codificación técnica SQL",
+                q35b_label: "Diseño de visualización de datos",
+                q35c_label: "Modelado de aprendizaje automático",
+                q35d_label: "Comunicación empresarial",
+                q35e_label: "Creación de dashboards",
+                q35f_label: "Análisis estadístico",
+                q36Label: "P36: Califica tu interés en cada aspecto del rol de analista de datos",
+                q36_aspect: "Aspecto",
+                q36a_label: "Codificación técnica",
+                q36b_label: "Visualización de datos",
+                q36c_label: "Comunicación/Presentación",
+                q37aLabel: "P37.1: ¿Cómo típicamente rendes bajo presión de tiempo?",
+                q37a_label_1: "1 - Me siento calmado",
+                q37a_label_5: "5 - Siento tensión",
+                q37bLabel: "P37.2: ¿Cómo te sentiste durante el examen?",
+                q37b_label_1: "1 - Calmado",
+                q37b_label_5: "5 - Muy nervioso/tenso",
+                q37cLabel: "P37.3: ¿Cuánto tiempo típicamente necesitabas para realizar tareas de casa?",
+                q37c1Label: "Tareas SQL (horas)",
+                q37c2Label: "Tareas PowerBI (horas)",
+                q37c3Label: "Tareas Python (horas)",
+                q38Label: "P38: Estima el tiempo que necesitarías para completar tareas clave (horas aproximadas) en la vida real:",
+                q38aLabel: "Consulta SQL compleja (típica: 1-2 horas)",
+                q38bLabel: "Crear dashboard Power BI (típica: 2-3 horas)",
+                q38cLabel: "Script de procesamiento de datos Python (típica: 2-4 horas)",
+                q38dLabel: "Depuración de problema técnico (típica: 1-2 horas)",
+                q26_trueLabel: "Verdadero",
+                q26_falseLabel: "Falso",
+                q27_trueLabel: "Verdadero",
+                q27_falseLabel: "Falso",
+                submitBtn: "Enviar Evaluación",
+                resetBtn: "Limpiar Formulario",
+                reportTitle: "Informe de Evaluación",
+                stressTitle: "🎯 Hallazgo Clave: Gestión del Estrés y Comprensión de Tareas",
+                sqlReportTitle: "Evaluación SQL",
+                pythonReportTitle: "Evaluación Python",
+                powerbiReportTitle: "Evaluación Power BI",
+                readinessTitle: "💼 Preparación Técnica",
+                recommendationsTitle: "✨ Recomendaciones",
+                downloadPdfBtn: "Descargar como PDF",
+                newAssessmentBtn: "Comenzar Nueva Evaluación"
+            }
+        };
+        
+        let currentLanguage = 'en';
+        
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update all text elements
+            Object.keys(translations[lang]).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    if (element.tagName === 'INPUT' && element.type === 'button') {
+                        element.value = translations[lang][key];
+                    } else if (element.tagName === 'BUTTON') {
+                        element.textContent = translations[lang][key];
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+        }
+        
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            setLanguage('en');
+        });
+        
+        // Form submission and report generation
+        document.getElementById('assessmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Generate report
+            generateReport(data);
+            
+            // Show report
+            document.getElementById('assessmentForm').classList.add('hide');
+            document.getElementById('reportSection').classList.add('show');
+            document.querySelector('.success-message').classList.add('show');
+            
+            // Scroll to report
+            document.getElementById('reportSection').scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        function generateReport(data) {
+            // Get nickname
+            const nickname = data.nickname || 'Student';
+            
+            // Calculate section scores
+            const q1to3 = [parseInt(data.q1 || 0), parseInt(data.q2 || 0), parseInt(data.q3 || 0)].filter(v => v > 0);
+            const q4to6 = [parseInt(data.q4 || 0), parseInt(data.q5 || 0), parseInt(data.q6 || 0)].filter(v => v > 0);
+            const q7to8 = [parseInt(data.q7 || 0), parseInt(data.q8 || 0)].filter(v => v > 0);
+            const q9to11 = [parseInt(data.q9 || 0), parseInt(data.q10 || 0), parseInt(data.q11 || 0)].filter(v => v > 0);
+            const q12to15 = [parseInt(data.q12 || 0), parseInt(data.q13 || 0), parseInt(data.q14 || 0), parseInt(data.q15 || 0)].filter(v => v > 0);
+            const q16to18 = [parseInt(data.q16 || 0), parseInt(data.q17 || 0), parseInt(data.q18 || 0)].filter(v => v > 0);
+            const q19to20 = [parseInt(data.q19 || 0), parseInt(data.q20 || 0)].filter(v => v > 0);
+            const q21to22 = [parseInt(data.q21 || 0), parseInt(data.q22 || 0)].filter(v => v > 0);
+            const q23to25 = [parseInt(data.q23 || 0), parseInt(data.q24 || 0), parseInt(data.q25 || 0)].filter(v => v > 0);
+            
+            const sqlScore = q1to3.length > 0 ? (q1to3.reduce((a,b) => a+b, 0) / q1to3.length).toFixed(2) : 0;
+            const joinScore = q4to6.length > 0 ? (q4to6.reduce((a,b) => a+b, 0) / q4to6.length).toFixed(2) : 0;
+            const aggregateScore = q7to8.length > 0 ? (q7to8.reduce((a,b) => a+b, 0) / q7to8.length).toFixed(2) : 0;
+            const advancedSqlScore = q9to11.length > 0 ? (q9to11.reduce((a,b) => a+b, 0) / q9to11.length).toFixed(2) : 0;
+            const pythonScore = q12to15.length > 0 ? (q12to15.reduce((a,b) => a+b, 0) / q12to15.length).toFixed(2) : 0;
+            const pandasScore = q16to18.length > 0 ? (q16to18.reduce((a,b) => a+b, 0) / q16to18.length).toFixed(2) : 0;
+            const biModelScore = q19to20.length > 0 ? (q19to20.reduce((a,b) => a+b, 0) / q19to20.length).toFixed(2) : 0;
+            const biVizScore = q21to22.length > 0 ? (q21to22.reduce((a,b) => a+b, 0) / q21to22.length).toFixed(2) : 0;
+            const cognitiveScore = q23to25.length > 0 ? (q23to25.reduce((a,b) => a+b, 0) / q23to25.length).toFixed(2) : 0;
+            
+            // Analyze stress
+            const stress1 = parseInt(data.q37a || 3);
+            const stress2 = parseInt(data.q37b || 3);
+            const stressLevel = (stress1 + stress2) / 2;
+            
+            let stressAnalysis = '';
+            let stressIcon = stress1 <= 2 ? '✅' : stress1 <= 3 ? '⚠️' : '❌';
+            
+            if (currentLanguage === 'en') {
+                if (stressLevel <= 2) {
+                    stressAnalysis = `${stressIcon} <strong>Strong Stress Management:</strong> You demonstrate excellent ability to stay calm under pressure. Your performance remains stable even in challenging situations. This is a significant strength for real-world data analysis work.`;
+                } else if (stressLevel <= 3) {
+                    stressAnalysis = `${stressIcon} <strong>Moderate Stress Response:</strong> You handle pressure reasonably well. With practice and stress-reduction techniques, you can improve your composure further.`;
+                } else {
+                    stressAnalysis = `${stressIcon} <strong>High Stress Response:</strong> Stress management is an area for development. Consider implementing techniques like time management, regular breaks, and incremental problem-solving approaches.`;
+                }
+            } else {
+                if (stressLevel <= 2) {
+                    stressAnalysis = `${stressIcon} <strong>Fuerte Gestión del Estrés:</strong> Demuestras excelente capacidad para mantener la calma bajo presión. Tu rendimiento permanece estable incluso en situaciones desafiantes. Esta es una fortaleza significativa para el trabajo real de análisis de datos.`;
+                } else if (stressLevel <= 3) {
+                    stressAnalysis = `${stressIcon} <strong>Respuesta de Estrés Moderada:</strong> Manejas la presión razonablemente bien. Con práctica y técnicas de reducción de estrés, puedes mejorar tu compostura aún más.`;
+                } else {
+                    stressAnalysis = `${stressIcon} <strong>Respuesta de Estrés Alta:</strong> La gestión del estrés es un área para el desarrollo. Considera implementar técnicas como gestión del tiempo, descansos regulares y enfoques de resolución de problemas incrementales.`;
+                }
+            }
+            
+            // Analyze task understanding
+            let understandingAnalysis = '';
+            if (currentLanguage === 'en') {
+                if (cognitiveScore > 3.5) {
+                    understandingAnalysis = `<strong>Cognitive Load Alert:</strong> You report feeling overwhelmed and struggling to integrate concepts across domains. This suggests excellent self-awareness. Focus on building bridges between SQL, Python, and Power BI rather than learning them in isolation.`;
+                } else if (cognitiveScore > 2.5) {
+                    understandingAnalysis = `<strong>Task Understanding:</strong> You show reasonable confidence in grasping concepts. Continue practicing to strengthen your understanding of how different domains connect.`;
+                } else {
+                    understandingAnalysis = `<strong>Strong Integration:</strong> You feel confident connecting concepts across domains. This is valuable for advanced analytics work.`;
+                }
+            } else {
+                if (cognitiveScore > 3.5) {
+                    understandingAnalysis = `<strong>Alerta de Carga Cognitiva:</strong> Informas sentirte abrumado y luchar por integrar conceptos entre dominios. Esto sugiere excelente autoconocimiento. Enfócate en construir puentes entre SQL, Python y Power BI en lugar de aprenderlos aisladamente.`;
+                } else if (cognitiveScore > 2.5) {
+                    understandingAnalysis = `<strong>Comprensión de Tareas:</strong> Muestras confianza razonable en comprender conceptos. Continúa practicando para fortalecer tu comprensión de cómo se conectan los diferentes dominios.`;
+                } else {
+                    understandingAnalysis = `<strong>Integración Fuerte:</strong> Te sientes confiado conectando conceptos entre dominios. Esto es valioso para trabajo avanzado de análisis.`;
+                }
+            }
+            
+            // Update stress section
+            document.getElementById('stressContent').innerHTML = `
+                <p>${stressAnalysis}</p>
+                <p>${understandingAnalysis}</p>
+            `;
+            
+            // Update technical sections with skill icons
+            const successIcon = '🎯'; // You can also use: ✅
+            const workIcon = '💪'; // You can also use: ⚠️
+            
+            // SQL Report
+            let sqlReport = currentLanguage === 'en' 
+                ? `<p><strong>${successIcon} SQL Fundamentals (${sqlScore}/5):</strong> You have a solid foundation in basic SQL. Keep building on this strength.</p>`
+                : `<p><strong>${successIcon} Fundamentos SQL (${sqlScore}/5):</strong> Tienes una base sólida en SQL básico. Sigue construyendo sobre esta fortaleza.</p>`;
+            
+            if (joinScore > 3) {
+                sqlReport += currentLanguage === 'en'
+                    ? `<p><strong>${successIcon} JOIN Operations (${joinScore}/5):</strong> Good understanding of different JOIN types.</p>`
+                    : `<p><strong>${successIcon} Operaciones JOIN (${joinScore}/5):</strong> Buena comprensión de diferentes tipos de JOIN.</p>`;
+            } else {
+                sqlReport += currentLanguage === 'en'
+                    ? `<p><strong>${workIcon} JOIN Operations (${joinScore}/5):</strong> Area for improvement. Focus on understanding Primary/Foreign Key relationships.</p>`
+                    : `<p><strong>${workIcon} Operaciones JOIN (${joinScore}/5):</strong> Área para mejorar. Enfócate en entender las relaciones Clave Primaria/Extranjera.</p>`;
+            }
+            
+            document.getElementById('sqlReportContent').innerHTML = sqlReport;
+            
+            // Python Report
+            let pythonReport = currentLanguage === 'en'
+                ? `<p><strong>${successIcon} Python Fundamentals (${pythonScore}/5):</strong> You have good foundation in Python programming.</p>`
+                : `<p><strong>${successIcon} Fundamentos Python (${pythonScore}/5):</strong> Tienes una buena base en programación Python.</p>`;
+            
+            if (pandasScore > 3) {
+                pythonReport += currentLanguage === 'en'
+                    ? `<p><strong>${successIcon} Pandas Skills (${pandasScore}/5):</strong> Capable of handling data manipulation tasks.</p>`
+                    : `<p><strong>${successIcon} Habilidades Pandas (${pandasScore}/5):</strong> Capaz de manejar tareas de manipulación de datos.</p>`;
+            } else {
+                pythonReport += currentLanguage === 'en'
+                    ? `<p><strong>${workIcon} Pandas Skills (${pandasScore}/5):</strong> Practice data filtering and handling missing values.</p>`
+                    : `<p><strong>${workIcon} Habilidades Pandas (${pandasScore}/5):</strong> Practica el filtrado de datos y el manejo de valores faltantes.</p>`;
+            }
+            
+            document.getElementById('pythonReportContent').innerHTML = pythonReport;
+            
+            // Power BI Report
+            let biReport = currentLanguage === 'en'
+                ? `<p><strong>Power BI Modeling (${biModelScore}/5):</strong> `
+                : `<p><strong>Modelado Power BI (${biModelScore}/5):</strong> `;
+            
+            if (biModelScore > 3) {
+                biReport += currentLanguage === 'en'
+                    ? `${successIcon} You understand data modeling concepts and can create BI models.</p>`
+                    : `${successIcon} Entiendes conceptos de modelado de datos y puedes crear modelos BI.</p>`;
+            } else {
+                biReport += currentLanguage === 'en'
+                    ? `${workIcon} Focus on understanding star schema and table relationships. This is critical for BI work.</p>`
+                    : `${workIcon} Enfócate en entender el esquema de estrella y las relaciones de tabla. Esto es crítico para el trabajo de BI.</p>`;
+            }
+            
+            if (biVizScore > 3) {
+                biReport += currentLanguage === 'en'
+                    ? `<p><strong>${successIcon} Power BI Visualization (${biVizScore}/5):</strong> Good at creating dashboards and choosing appropriate visualizations.</p>`
+                    : `<p><strong>${successIcon} Visualización Power BI (${biVizScore}/5):</strong> Bueno creando dashboards y eligiendo visualizaciones apropiadas.</p>`;
+            } else {
+                biReport += currentLanguage === 'en'
+                    ? `<p><strong>${workIcon} Power BI Visualization (${biVizScore}/5):</strong> Practice creating more complex dashboards with multiple visualizations.</p>`
+                    : `<p><strong>${workIcon} Visualización Power BI (${biVizScore}/5):</strong> Practica creando dashboards más complejos con múltiples visualizaciones.</p>`;
+            }
+            
+            document.getElementById('powerbiReportContent').innerHTML = biReport;
+            
+            // Technical Readiness
+            let readinessContent = currentLanguage === 'en'
+                ? `<p><strong>Overall Technical Score:</strong> Your combined score across all technical domains suggests you are <strong>`
+                : `<p><strong>Puntuación Técnica General:</strong> Tu puntuación combinada en todos los dominios técnicos sugiere que eres <strong>`;
+            
+            const avgScore = (parseFloat(sqlScore) + parseFloat(pythonScore) + parseFloat(biModelScore)) / 3;
+            if (avgScore > 3.5) {
+                readinessContent += currentLanguage === 'en' 
+                    ? `proficient</strong> and ready for intermediate projects.</p>`
+                    : `competente</strong> y listo para proyectos intermedios.</p>`;
+            } else if (avgScore > 2.5) {
+                readinessContent += currentLanguage === 'en'
+                    ? `progressing</strong> and on track for continued development.</p>`
+                    : `en progreso</strong> y en camino para el desarrollo continuo.</p>`;
+            } else {
+                readinessContent += currentLanguage === 'en'
+                    ? `at risk</strong> and would benefit from focused remediation.</p>`
+                    : `en riesgo</strong> y se beneficiaría de una remediación enfocada.</p>`;
+            }
+            
+            document.getElementById('readinessContent').innerHTML = readinessContent;
+            
+            // Recommendations
+            let recommendations = currentLanguage === 'en'
+                ? `<ol><li><strong>Stress Management First:</strong> ${stressLevel > 3 ? 'Your stress response is high. Focus on stress-reduction techniques before tackling advanced technical content.' : 'Your stress management is strong. Use this to tackle challenging topics with confidence.'}</li>`
+                : `<ol><li><strong>Gestión del Estrés Primero:</strong> ${stressLevel > 3 ? 'Tu respuesta al estrés es alta. Enfócate en técnicas de reducción de estrés antes de abordar contenido técnico avanzado.' : 'Tu gestión del estrés es fuerte. Usa esto para abordar temas desafiantes con confianza.'}</li>`;
+            
+            if (cognitiveScore > 3.5) {
+                recommendations += currentLanguage === 'en'
+                    ? `<li><strong>Build Domain Bridges:</strong> Create concept maps showing how SQL concepts relate to Power BI modeling and Python data handling.</li>`
+                    : `<li><strong>Construir Puentes de Dominios:</strong> Crea mapas conceptuales mostrando cómo se relacionan los conceptos de SQL con el modelado de Power BI y el manejo de datos en Python.</li>`;
+            }
+            
+            if (joinScore < 3 || biModelScore < 3) {
+                recommendations += currentLanguage === 'en'
+                    ? `<li><strong>Database Fundamentals:</strong> Take a course on relational database design to strengthen your understanding of schemas, keys, and relationships.</li>`
+                    : `<li><strong>Fundamentos de Bases de Datos:</strong> Toma un curso sobre diseño de bases de datos relacionales para fortalecer tu comprensión de esquemas, claves y relaciones.</li>`;
+            }
+            
+            recommendations += currentLanguage === 'en'
+                ? `<li><strong>Hands-On Projects:</strong> Apply your knowledge through real-world projects that combine SQL, Python, and Power BI.</li></ol>`
+                : `<li><strong>Proyectos Prácticos:</strong> Aplica tu conocimiento a través de proyectos del mundo real que combinen SQL, Python y Power BI.</li></ol>`;
+            
+            document.getElementById('recommendationsContent').innerHTML = recommendations;
+        }
+        
+        function generatePDF() {
+            const element = document.getElementById('reportSection');
+            const opt = {
+                margin: 10,
+                filename: `Assessment_Report_${new Date().toISOString().slice(0,10)}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+        
+        function resetAssessment() {
+            document.getElementById('assessmentForm').reset();
+            document.getElementById('reportSection').classList.remove('show');
+            document.getElementById('assessmentForm').classList.remove('hide');
+            document.querySelector('.success-message').classList.remove('show');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
